@@ -1,0 +1,9 @@
+{
+  "name": "HifiTuneDefault",
+  "colors": {
+    "background": "#12131A",
+    "accent": "#5ED4FF",
+    "text": "#F5F7FF"
+  },
+  "cornerRadius": 6
+}
