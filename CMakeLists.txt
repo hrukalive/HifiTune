@@ -89,8 +89,10 @@ target_sources(HiFiTune
         src/ui/SidebarComponent.cpp
         src/ui/NoteViewComponent.cpp
         src/ui/PitchViewComponent.cpp
+        src/ui/QuickHelpOverlay.cpp
         src/ui/OverviewComponent.cpp
         src/ui/TimelineComponent.cpp
+        src/ui/ViewportController.cpp
         src/vocoder/Vocoder.cpp
         src/vocoder/NsfHifiGanVocoder.cpp
         src/plugin/PluginProcessor.cpp

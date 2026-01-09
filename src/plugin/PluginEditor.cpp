@@ -5,6 +5,7 @@ HifiTuneAudioProcessorEditor::HifiTuneAudioProcessorEditor(juce::AudioProcessor&
 {
     setSize(1280, 720);
     addAndMakeVisible(mainEditor);
+    mainEditor.grabKeyboardFocus();
 }
 
 HifiTuneAudioProcessorEditor::~HifiTuneAudioProcessorEditor() = default;

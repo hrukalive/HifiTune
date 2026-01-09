@@ -14,7 +14,13 @@ public:
     void resized() override;
 
     void setMode(EditorMode mode);
+    void setAutoFollowEnabled(bool enabled);
+    void togglePlay();
+    void setPlaying(bool playing);
+    bool isPlaying() const;
     std::function<void(EditorMode)> onModeChange;
+    std::function<void()> onAutoFollowReset;
+    std::function<void()> onQuickHelpToggle;
 
 private:
     void handleModeClick(EditorMode mode);
@@ -23,6 +29,8 @@ private:
     juce::TextButton playButton { "Play" };
     juce::TextButton stopButton { "Stop" };
     juce::TextButton previewButton { "Preview" };
+    juce::TextButton autoFollowButton { "Auto-Follow" };
+    juce::TextButton helpButton { "Quick Help" };
     juce::TextButton modeButtons[6] {
         juce::TextButton("Pitch/Amplitude"),
         juce::TextButton("Timing"),
