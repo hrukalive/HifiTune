@@ -17,7 +17,9 @@ HistoryComponent::HistoryComponent()
             "Clear History",
             "This will remove all undo and redo steps. Do you want to continue?",
             "Clear",
-            "Cancel");
+            "Cancel",
+            nullptr,
+            nullptr);
 
         if (!confirmed)
             return;
