@@ -72,6 +72,10 @@ target_sources(HiFiTune
         src/analysis/PitchAnalyzer.cpp
         src/analysis/SilenceSegmenter.cpp
         src/analysis/Stretching.cpp
+        src/inference/ModelConfig.cpp
+        src/inference/ModelLoader.cpp
+        src/inference/ModelRegistry.cpp
+        src/inference/OnnxRuntimeEngine.cpp
         src/ui/LookAndFeel.cpp
         src/plugin/PluginProcessor.cpp
         src/plugin/PluginEditor.cpp
