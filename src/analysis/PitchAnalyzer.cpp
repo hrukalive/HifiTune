@@ -42,7 +42,7 @@ juce::Array<double> PitchAnalyzer::getF0Curve(const juce::ValueTree& tree)
     return fromVarArray(tree.getProperty(f0CurveId));
 }
 
-void PitchAnalyzer::setF0Curve(const juce::ValueTree& tree,
+void PitchAnalyzer::setF0Curve(juce::ValueTree& tree,
                                const juce::Array<double>& values,
                                juce::UndoManager* undoManager)
 {

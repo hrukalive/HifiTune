@@ -18,7 +18,7 @@ public:
     static bool isResultTree(const juce::ValueTree& tree);
 
     static juce::Array<double> getF0Curve(const juce::ValueTree& tree);
-    static void setF0Curve(const juce::ValueTree& tree, const juce::Array<double>& values, juce::UndoManager* undoManager);
+    static void setF0Curve(juce::ValueTree& tree, const juce::Array<double>& values, juce::UndoManager* undoManager);
 
     static const juce::Identifier resultTypeId;
     static const juce::Identifier f0CurveId;

@@ -19,8 +19,8 @@ public:
 
     static juce::Array<double> getHarmonicMask(const juce::ValueTree& tree);
     static juce::Array<double> getNoiseMask(const juce::ValueTree& tree);
-    static void setHarmonicMask(const juce::ValueTree& tree, const juce::Array<double>& values, juce::UndoManager* undoManager);
-    static void setNoiseMask(const juce::ValueTree& tree, const juce::Array<double>& values, juce::UndoManager* undoManager);
+    static void setHarmonicMask(juce::ValueTree& tree, const juce::Array<double>& values, juce::UndoManager* undoManager);
+    static void setNoiseMask(juce::ValueTree& tree, const juce::Array<double>& values, juce::UndoManager* undoManager);
 
     static const juce::Identifier resultTypeId;
     static const juce::Identifier harmonicMaskId;

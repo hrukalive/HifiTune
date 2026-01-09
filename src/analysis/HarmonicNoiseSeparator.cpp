@@ -48,14 +48,14 @@ juce::Array<double> HarmonicNoiseSeparator::getNoiseMask(const juce::ValueTree& 
     return fromVarArray(tree.getProperty(noiseMaskId));
 }
 
-void HarmonicNoiseSeparator::setHarmonicMask(const juce::ValueTree& tree,
+void HarmonicNoiseSeparator::setHarmonicMask(juce::ValueTree& tree,
                                              const juce::Array<double>& values,
                                              juce::UndoManager* undoManager)
 {
     tree.setProperty(harmonicMaskId, toVarArray(values), undoManager);
 }
 
-void HarmonicNoiseSeparator::setNoiseMask(const juce::ValueTree& tree,
+void HarmonicNoiseSeparator::setNoiseMask(juce::ValueTree& tree,
                                           const juce::Array<double>& values,
                                           juce::UndoManager* undoManager)
 {
