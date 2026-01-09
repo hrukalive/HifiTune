@@ -66,7 +66,7 @@ void MainEditor::resized()
     auto sidebarArea = bounds.removeFromLeft(240);
     sidebar.setBounds(sidebarArea);
 
-    auto pitchArea = bounds.removeFromTop(bounds.getHeight() * 0.55);
+    auto pitchArea = bounds.removeFromTop(juce::roundToInt(bounds.getHeight() * 0.55));
     pitchView.setBounds(pitchArea.reduced(4));
     noteView.setBounds(bounds.reduced(4));
     quickHelpOverlay.setBounds(getLocalBounds());
@@ -117,8 +117,7 @@ void MainEditor::updateQuickHelpContent()
         juce::ApplicationCommandInfo info(commandID);
         getCommandInfo(commandID, info);
 
-        juce::Array<juce::KeyPress> keys;
-        commandManager.getKeyMappings().getKeyPressesAssignedToCommand(commandID, keys);
+        auto keys = commandManager.getKeyMappings().getKeyPressesAssignedToCommand(commandID);
         if (keys.isEmpty())
             continue;
 
