@@ -63,12 +63,22 @@ juce_generate_juce_header(HiFiTune)
 target_sources(HiFiTune
     PRIVATE
         src/SharedResources.cpp
+        src/analysis/AnalysisPipeline.cpp
+        src/analysis/AnalyzerRegistry.cpp
+        src/analysis/AudioBufferSource.cpp
+        src/analysis/HarmonicNoiseSeparator.cpp
+        src/analysis/MelSpectrogram.cpp
+        src/analysis/MidiNoteExtractor.cpp
+        src/analysis/PitchAnalyzer.cpp
+        src/analysis/SilenceSegmenter.cpp
+        src/analysis/Stretching.cpp
         src/ui/LookAndFeel.cpp
         src/plugin/PluginProcessor.cpp
         src/plugin/PluginEditor.cpp
         src/ara/AraIntegration.cpp
         src/ara/AraDocumentController.cpp
         src/ara/AraRegionMapper.cpp
+        src/model/AnalysisConfigState.cpp
         src/model/ProjectState.cpp
         src/model/TrackState.cpp
         src/model/ClipState.cpp
