@@ -38,7 +38,7 @@ void AraRegionMapper::rebuildSegmentsForClip(const RegionInfo& info, juce::UndoM
     if (info.lengthBeats <= 0.0)
         return;
 
-    const auto segmentsTree = projectState.getSegmentsTree();
+    auto segmentsTree = projectState.getSegmentsTree();
 
     if (info.audioBuffer == nullptr || info.audioBuffer->getNumSamples() == 0)
     {

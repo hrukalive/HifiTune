@@ -2,6 +2,7 @@
 
 #include <juce_audio_processors/juce_audio_processors.h>
 
+#include <cstdint>
 #include <optional>
 
 #include "AraRegionMapper.h"
@@ -16,12 +17,12 @@ public:
 
     const juce::AudioBuffer<float>& getBuffer() const noexcept { return recordedBuffer; }
     double getSampleRate() const noexcept { return sampleRate; }
-    int64 getWritePosition() const noexcept { return writePosition; }
+    int64_t getWritePosition() const noexcept { return writePosition; }
 
 private:
     juce::AudioBuffer<float> recordedBuffer;
     double sampleRate = 0.0;
-    int64 writePosition = 0;
+    int64_t writePosition = 0;
 };
 
 #if HIFITUNE_ENABLE_ARA
