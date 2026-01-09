@@ -2,7 +2,12 @@
 
 #include <juce_audio_processors/juce_audio_processors.h>
 
+#include "../ara/AraDocumentController.h"
+
 class HifiTuneAudioProcessor final : public juce::AudioProcessor
+#if HIFITUNE_ENABLE_ARA
+  , public juce::AudioProcessorARAExtension
+#endif
 {
 public:
     HifiTuneAudioProcessor();
@@ -32,4 +37,7 @@ public:
 
     void getStateInformation(juce::MemoryBlock& destData) override;
     void setStateInformation(const void* data, int sizeInBytes) override;
+
+private:
+    LocalAudioRecorder localRecorder;
 };

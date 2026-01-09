@@ -67,6 +67,8 @@ target_sources(HiFiTune
         src/plugin/PluginProcessor.cpp
         src/plugin/PluginEditor.cpp
         src/ara/AraIntegration.cpp
+        src/ara/AraDocumentController.cpp
+        src/ara/AraRegionMapper.cpp
         src/model/ProjectState.cpp
         src/model/TrackState.cpp
         src/model/ClipState.cpp

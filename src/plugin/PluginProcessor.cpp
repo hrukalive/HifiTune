@@ -64,12 +64,14 @@ void HifiTuneAudioProcessor::changeProgramName(int, const juce::String&)
 {
 }
 
-void HifiTuneAudioProcessor::prepareToPlay(double, int)
+void HifiTuneAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
+    localRecorder.prepare(sampleRate, getTotalNumInputChannels(), samplesPerBlock);
 }
 
 void HifiTuneAudioProcessor::releaseResources()
 {
+    localRecorder.reset();
 }
 
 bool HifiTuneAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
@@ -81,6 +83,12 @@ bool HifiTuneAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) 
 void HifiTuneAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
 {
     juce::ScopedNoDenormals noDenormals;
+#if HIFITUNE_ENABLE_ARA
+    const auto realtime = isNonRealtime() ? juce::AudioProcessor::Realtime::no : juce::AudioProcessor::Realtime::yes;
+    if (processBlockForARA(buffer, realtime, getPlayHead()))
+        return;
+#endif
+    localRecorder.pushBlock(buffer);
     buffer.clear();
 }
 
