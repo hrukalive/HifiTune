@@ -1,6 +1,9 @@
-[submodule "external/juce"]
-	path = external/juce
-	url = https://github.com/juce-framework/JUCE.git
-[submodule "external/JUCE_ARA"]
-	path = external/JUCE_ARA
-	url = https://github.com/Celemony/JUCE_ARA.git
+[submodule "externals/ARA_SDK"]
+	path = externals/ARA_SDK
+	url = https://github.com/Celemony/ARA_SDK
+[submodule "externals/vcpkg"]
+	path = externals/vcpkg
+	url = https://github.com/microsoft/vcpkg
+[submodule "externals/JUCE"]
+	path = externals/JUCE
+	url = https://github.com/juce-framework/JUCE
