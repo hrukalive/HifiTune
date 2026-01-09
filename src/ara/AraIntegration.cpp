@@ -1,6 +1,7 @@
 #include "AraIntegration.h"
 
-void HifiTuneAraIntegration::configureProcessor(juce::AudioProcessor&)
+void HifiTuneAraIntegration::configureProcessor(juce::AudioProcessor& processor)
 {
-    // Placeholder for ARA-specific configuration.
+    juce::ignoreUnused(processor);
+    // ARA-specific configuration is handled by the JUCE ARA document controller and factory.
 }
