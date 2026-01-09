@@ -43,7 +43,6 @@ void NoteViewComponent::paint(juce::Graphics& g)
     const auto viewX = viewport.getViewX();
     const auto viewY = viewport.getViewY();
     const double viewHeight = viewY.getLength();
-    const float rowHeight = viewHeight > 0.0 ? noteArea.getHeight() / static_cast<float>(viewHeight) : noteArea.getHeight();
     const int maxNote = static_cast<int>(std::ceil(viewY.getEnd()));
     const int minNote = static_cast<int>(std::floor(viewY.getStart()));
 

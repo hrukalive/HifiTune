@@ -1,7 +1,7 @@
 #pragma once
 
 #include <juce_gui_basics/juce_gui_basics.h>
-#include "commands/CommandManager.h"
+#include "../commands/CommandManager.h"
 #include "EditorMode.h"
 #include "ToolbarComponent.h"
 #include "SidebarComponent.h"

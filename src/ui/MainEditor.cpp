@@ -1,5 +1,5 @@
 #include "MainEditor.h"
-#include "commands/CommandIDs.h"
+#include "../commands/CommandIDs.h"
 
 MainEditor::MainEditor()
 {

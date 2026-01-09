@@ -120,7 +120,6 @@ void ToolbarComponent::resized()
     stopButton.setBounds(transportArea.removeFromLeft(70).reduced(2));
     previewButton.setBounds(transportArea.removeFromLeft(90).reduced(2));
 
-    const int buttonHeight = bounds.getHeight();
     const int buttonWidth = juce::jmax(90, bounds.getWidth() / 6);
 
     for (int i = 0; i < 6; ++i)
