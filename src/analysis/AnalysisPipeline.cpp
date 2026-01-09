@@ -13,6 +13,7 @@ AnalysisPipeline::Result AnalysisPipeline::analyze(const AudioBufferSource& audi
                                                    const juce::String& pitchAnalyzerId,
                                                    const juce::String& midiExtractorId,
                                                    const juce::String& separatorId,
+                                                   const TensionState& tension,
                                                    juce::UndoManager* undoManager)
 {
     Result result;
@@ -26,6 +27,18 @@ AnalysisPipeline::Result AnalysisPipeline::analyze(const AudioBufferSource& audi
 
     result.analysisTree.addChild(segmentsTree, -1, undoManager);
 
+    if (auto separator = registry.createHarmonicNoiseSeparator(separatorId))
+    {
+        auto separatorTree = separator->analyze(audioSource,
+                                                config,
+                                                result.segments,
+                                                segmenter.getSettings().beatsPerSecond,
+                                                tension,
+                                                undoManager);
+        if (separatorTree.isValid())
+            result.analysisTree.addChild(separatorTree, -1, undoManager);
+    }
+
     if (auto pitchAnalyzer = registry.createPitchAnalyzer(pitchAnalyzerId))
     {
         auto pitchTree = pitchAnalyzer->analyze(audioSource, config, undoManager);
@@ -38,13 +51,6 @@ AnalysisPipeline::Result AnalysisPipeline::analyze(const AudioBufferSource& audi
         auto notesTree = noteExtractor->analyze(audioSource, config, undoManager);
         if (notesTree.isValid())
             result.analysisTree.addChild(notesTree, -1, undoManager);
-    }
-
-    if (auto separator = registry.createHarmonicNoiseSeparator(separatorId))
-    {
-        auto separatorTree = separator->analyze(audioSource, config, undoManager);
-        if (separatorTree.isValid())
-            result.analysisTree.addChild(separatorTree, -1, undoManager);
     }
 
     return result;

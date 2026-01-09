@@ -5,15 +5,27 @@
 class TensionState
 {
 public:
+    struct Blend
+    {
+        double harmonic{0.5};
+        double noise{0.5};
+
+        bool operator==(const Blend& other) const;
+        bool operator!=(const Blend& other) const;
+    };
+
     explicit TensionState(juce::ValueTree tree);
 
     static TensionState create();
     static bool isTension(const juce::ValueTree& tree);
+    static Blend blendFromTension(double tension);
 
     bool isValid() const;
     juce::ValueTree getValueTree() const;
 
     juce::var getPoints() const;
+    juce::Array<double> getPointValues() const;
+    Blend getBlendForIndex(int index, double fallback = 0.5) const;
     void setPoints(const juce::var& points, juce::UndoManager* undoManager);
 
     void addListener(juce::ValueTree::Listener* listener);
