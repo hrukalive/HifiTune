@@ -37,6 +37,7 @@ private:
     CommandManager commandManager;
     ToolbarComponent toolbar;
     SidebarComponent sidebar;
+    juce::UndoManager undoManager;
     PitchViewComponent pitchView;
     NoteViewComponent noteView;
     QuickHelpOverlay quickHelpOverlay;

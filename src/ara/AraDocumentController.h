@@ -3,7 +3,9 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 
 #include <cstdint>
+#include <memory>
 #include <optional>
+#include <vector>
 
 #include "AraRegionMapper.h"
 #include "../model/ProjectState.h"
@@ -65,11 +67,19 @@ private:
     void ensureSettingsDefaults();
     void updatePlaybackRegion(juce::ARAPlaybackRegion* playbackRegion);
 
-    juce::UndoManager* currentUndoManager();
+    juce::UndoManager* currentUndoManagerForTrack(const juce::String& trackKey);
+    juce::String trackKeyForRegionSequence(const juce::ARARegionSequence* regionSequence) const;
+    juce::String trackKeyForPlaybackRegion(const juce::ARAPlaybackRegion* playbackRegion) const;
 
     ProjectState projectState;
     AraRegionMapper regionMapper{projectState};
     std::optional<ProjectState::Transaction> activeTransaction;
+    struct TrackUndoHistory
+    {
+        juce::String trackKey;
+        std::unique_ptr<juce::UndoManager> undoManager;
+    };
+    std::vector<TrackUndoHistory> trackUndoManagers;
 
     juce::AudioPlayHead::PositionInfo lastPosition;
 

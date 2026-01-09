@@ -1,6 +1,7 @@
 #pragma once
 
 #include <juce_gui_basics/juce_gui_basics.h>
+#include "history/HistoryComponent.h"
 #include "lookandfeel/EditorLookAndFeel.h"
 
 class SidebarComponent final : public juce::Component
@@ -11,6 +12,7 @@ public:
 
     void paint(juce::Graphics& g) override;
     void resized() override;
+    void setUndoManager(juce::UndoManager* undoManager);
 
 private:
     SidebarLookAndFeel lookAndFeel;
@@ -18,9 +20,12 @@ private:
     juce::GroupComponent scaleGroup { "scaleGroup", "Scale" };
     juce::GroupComponent midiRefGroup { "midiRefGroup", "MIDI Ref" };
     juce::GroupComponent timeGroup { "timeGroup", "Time" };
+    juce::GroupComponent historyGroup { "historyGroup", "History" };
 
     juce::ComboBox settingsBox;
     juce::ComboBox scaleBox;
     juce::ComboBox midiRefBox;
     juce::ComboBox timeBox;
+
+    HistoryComponent history;
 };

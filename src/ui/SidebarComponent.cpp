@@ -26,11 +26,13 @@ SidebarComponent::SidebarComponent()
     addAndMakeVisible(scaleGroup);
     addAndMakeVisible(midiRefGroup);
     addAndMakeVisible(timeGroup);
+    addAndMakeVisible(historyGroup);
 
     settingsGroup.addAndMakeVisible(settingsBox);
     scaleGroup.addAndMakeVisible(scaleBox);
     midiRefGroup.addAndMakeVisible(midiRefBox);
     timeGroup.addAndMakeVisible(timeBox);
+    historyGroup.addAndMakeVisible(history);
 }
 
 SidebarComponent::~SidebarComponent()
@@ -53,7 +55,7 @@ void SidebarComponent::resized()
 {
     auto bounds = getLocalBounds().reduced(8);
     bounds.removeFromTop(24);
-    const int groupHeight = (bounds.getHeight() - 24) / 4;
+    const int groupHeight = 68;
 
     auto settingsBounds = bounds.removeFromTop(groupHeight);
     settingsGroup.setBounds(settingsBounds);
@@ -73,4 +75,14 @@ void SidebarComponent::resized()
     auto timeBounds = bounds.removeFromTop(groupHeight);
     timeGroup.setBounds(timeBounds);
     timeBox.setBounds(timeBounds.reduced(12, 24));
+
+    bounds.removeFromTop(8);
+    auto historyBounds = bounds;
+    historyGroup.setBounds(historyBounds);
+    history.setBounds(historyBounds.reduced(12, 24));
+}
+
+void SidebarComponent::setUndoManager(juce::UndoManager* undoManager)
+{
+    history.setUndoManager(undoManager);
 }
