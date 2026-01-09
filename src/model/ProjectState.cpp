@@ -8,6 +8,7 @@ const juce::Identifier ProjectState::notesTypeId{"Notes"};
 const juce::Identifier ProjectState::editsTypeId{"Edits"};
 const juce::Identifier ProjectState::settingsTypeId{"Settings"};
 const juce::Identifier ProjectState::sessionSettingsTypeId{"SessionSettings"};
+const juce::Identifier ProjectState::midiReferenceTypeId{"MidiReference"};
 
 ProjectState::Transaction::Transaction(ProjectState& stateIn, const juce::String& name)
     : state(&stateIn)
@@ -60,6 +61,7 @@ ProjectState::ProjectState(juce::ValueTree rootTree)
     ensureChildWithType(editsTypeId);
     ensureChildWithType(settingsTypeId);
     ensureChildWithType(sessionSettingsTypeId);
+    ensureChildWithType(midiReferenceTypeId);
 }
 
 juce::ValueTree ProjectState::getRoot() const
@@ -100,6 +102,11 @@ juce::ValueTree ProjectState::getSettingsTree()
 juce::ValueTree ProjectState::getSessionSettingsTree()
 {
     return ensureChildWithType(sessionSettingsTypeId);
+}
+
+juce::ValueTree ProjectState::getMidiReferenceTree()
+{
+    return ensureChildWithType(midiReferenceTypeId);
 }
 
 juce::UndoManager& ProjectState::getUndoManager()

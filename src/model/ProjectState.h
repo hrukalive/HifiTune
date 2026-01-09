@@ -33,6 +33,7 @@ public:
     juce::ValueTree getEditsTree();
     juce::ValueTree getSettingsTree();
     juce::ValueTree getSessionSettingsTree();
+    juce::ValueTree getMidiReferenceTree();
 
     juce::UndoManager& getUndoManager();
 
@@ -50,6 +51,7 @@ public:
     static const juce::Identifier editsTypeId;
     static const juce::Identifier settingsTypeId;
     static const juce::Identifier sessionSettingsTypeId;
+    static const juce::Identifier midiReferenceTypeId;
 
 private:
     juce::ValueTree ensureChildWithType(const juce::Identifier& type);
