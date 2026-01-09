@@ -16,6 +16,9 @@ ToolbarComponent::ToolbarComponent()
     addAndMakeVisible(previewButton);
     addAndMakeVisible(autoFollowButton);
     addAndMakeVisible(helpButton);
+    addAndMakeVisible(statusLabel);
+    addAndMakeVisible(analysisProgressBar);
+    addAndMakeVisible(cancelButton);
 
     for (auto& button : modeButtons)
     {
@@ -43,6 +46,15 @@ ToolbarComponent::ToolbarComponent()
             onQuickHelpToggle();
     };
     stopButton.onClick = [this] { setPlaying(false); };
+    cancelButton.onClick = [this]
+    {
+        if (onCancelAnalysis)
+            onCancelAnalysis();
+    };
+
+    statusLabel.setText("Ready", juce::NotificationType::dontSendNotification);
+    statusLabel.setJustificationType(juce::Justification::centredLeft);
+    cancelButton.setEnabled(false);
 }
 
 ToolbarComponent::~ToolbarComponent()
@@ -56,18 +68,21 @@ void ToolbarComponent::paint(juce::Graphics& g)
 
     auto bounds = getLocalBounds().reduced(8);
     auto transportArea = bounds.removeFromLeft(240);
-    auto modeArea = bounds.removeFromLeft(bounds.getWidth() - 260);
-    auto actionsArea = bounds;
+    auto actionsArea = bounds.removeFromRight(240);
+    auto statusArea = bounds.removeFromRight(260);
+    auto modeArea = bounds;
 
     g.setColour(juce::Colour::fromString("#2D3247"));
     g.drawRoundedRectangle(transportArea.toFloat(), 6.0f, 1.0f);
     g.drawRoundedRectangle(modeArea.toFloat(), 6.0f, 1.0f);
+    g.drawRoundedRectangle(statusArea.toFloat(), 6.0f, 1.0f);
     g.drawRoundedRectangle(actionsArea.toFloat(), 6.0f, 1.0f);
 
     g.setColour(findColour(juce::Label::textColourId));
     g.setFont(12.0f);
     g.drawText("Transport", transportArea.removeFromTop(18), juce::Justification::centredLeft);
     g.drawText("Modes", modeArea.removeFromTop(18), juce::Justification::centredLeft);
+    g.drawText("Status", statusArea.removeFromTop(18), juce::Justification::centredLeft);
     g.drawText("View", actionsArea.removeFromTop(18), juce::Justification::centredLeft);
 }
 
@@ -115,21 +130,30 @@ void ToolbarComponent::resized()
     auto bounds = getLocalBounds().reduced(8);
     auto transportArea = bounds.removeFromLeft(240);
     auto actionsArea = bounds.removeFromRight(240);
+    auto statusArea = bounds.removeFromRight(260);
+    auto modeArea = bounds;
 
     playButton.setBounds(transportArea.removeFromLeft(70).reduced(2));
     stopButton.setBounds(transportArea.removeFromLeft(70).reduced(2));
     previewButton.setBounds(transportArea.removeFromLeft(90).reduced(2));
 
-    const int buttonWidth = juce::jmax(90, bounds.getWidth() / 6);
+    const int buttonWidth = juce::jmax(90, modeArea.getWidth() / 6);
 
     for (int i = 0; i < 6; ++i)
     {
-        modeButtons[i].setBounds(bounds.removeFromLeft(buttonWidth).reduced(3, 6));
-        bounds.removeFromLeft(4);
+        modeButtons[i].setBounds(modeArea.removeFromLeft(buttonWidth).reduced(3, 6));
+        modeArea.removeFromLeft(4);
     }
 
     autoFollowButton.setBounds(actionsArea.removeFromTop(actionsArea.getHeight() / 2).reduced(6, 6));
     helpButton.setBounds(actionsArea.reduced(6, 6));
+
+    auto statusContent = statusArea.reduced(6, 6);
+    statusLabel.setBounds(statusContent.removeFromTop(18));
+    statusContent.removeFromTop(6);
+    analysisProgressBar.setBounds(statusContent.removeFromTop(18));
+    statusContent.removeFromTop(6);
+    cancelButton.setBounds(statusContent.removeFromTop(22));
 }
 
 void ToolbarComponent::setAutoFollowEnabled(bool enabled)
@@ -150,4 +174,14 @@ void ToolbarComponent::setPlaying(bool playing)
 bool ToolbarComponent::isPlaying() const
 {
     return playButton.getToggleState();
+}
+
+void ToolbarComponent::setAnalysisStatus(const juce::String& message, double progress, ProgressState state)
+{
+    analysisState = state;
+    statusLabel.setText(message, juce::NotificationType::dontSendNotification);
+    analysisProgress = progress;
+    cancelButton.setEnabled(state == ProgressState::Active);
+    analysisProgressBar.setVisible(state != ProgressState::Idle);
+    repaint();
 }
