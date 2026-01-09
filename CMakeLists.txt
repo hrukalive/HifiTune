@@ -76,10 +76,14 @@ target_sources(HiFiTune
         src/inference/ModelLoader.cpp
         src/inference/ModelRegistry.cpp
         src/inference/OnnxRuntimeEngine.cpp
+        src/midi/MidiReferenceManager.cpp
+        src/midi/MidiReferenceSnapper.cpp
+        src/midi/SomeMidiExtractor.cpp
         src/pitch/PitchDetector.cpp
         src/pitch/RmvpePitchDetector.cpp
         src/pitch/FcpePitchDetector.cpp
         src/ui/LookAndFeel.cpp
+        src/ui/MidiReferenceOverlay.cpp
         src/plugin/PluginProcessor.cpp
         src/plugin/PluginEditor.cpp
         src/ara/AraIntegration.cpp
@@ -91,6 +95,8 @@ target_sources(HiFiTune
         src/model/ClipState.cpp
         src/model/SegmentState.cpp
         src/model/NoteState.cpp
+        src/model/MidiNoteState.cpp
+        src/model/MidiReferenceState.cpp
         src/model/PitchCurveState.cpp
         src/model/TensionState.cpp
         src/commands/CommandManager.cpp
