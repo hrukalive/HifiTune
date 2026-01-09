@@ -13,6 +13,7 @@ MainEditor::MainEditor()
     toolbar.onModeChange = [this](EditorMode mode) { setMode(mode); };
     toolbar.onAutoFollowReset = [this] { setAutoFollow(true); };
     toolbar.onQuickHelpToggle = [this] { toggleQuickHelp(); };
+    toolbar.onCancelAnalysis = [this] { analysisQueue.cancelCurrent(); };
 
     pitchView.onAutoFollowChanged = [this](bool enabled) { setAutoFollow(enabled); };
     noteView.onAutoFollowChanged = [this](bool enabled) { setAutoFollow(enabled); };
@@ -39,6 +40,33 @@ MainEditor::MainEditor()
     toolbar.setAutoFollowEnabled(autoFollowEnabled);
     sidebar.setUndoManager(&undoManager);
     updateQuickHelpContent();
+
+    analysisReporter = std::make_shared<GuiProgressReporter>(
+        [this](double progress, const juce::String& message, ProgressState state)
+        {
+            juce::String displayMessage = message;
+            if (displayMessage.isEmpty())
+            {
+                switch (state)
+                {
+                    case ProgressState::Active:
+                        displayMessage = "Running analysis...";
+                        break;
+                    case ProgressState::Completed:
+                        displayMessage = "Analysis completed";
+                        break;
+                    case ProgressState::Cancelled:
+                        displayMessage = "Analysis cancelled";
+                        break;
+                    case ProgressState::Idle:
+                        displayMessage = "Ready";
+                        break;
+                }
+            }
+            toolbar.setAnalysisStatus(displayMessage, progress, state);
+        });
+
+    toolbar.setAnalysisStatus("Ready", 0.0, ProgressState::Idle);
 }
 
 MainEditor::~MainEditor()

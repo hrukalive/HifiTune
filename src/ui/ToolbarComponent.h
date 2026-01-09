@@ -3,6 +3,7 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 #include "EditorMode.h"
 #include "lookandfeel/EditorLookAndFeel.h"
+#include "../tasks/ProgressReporter.h"
 
 class ToolbarComponent final : public juce::Component
 {
@@ -18,9 +19,11 @@ public:
     void togglePlay();
     void setPlaying(bool playing);
     bool isPlaying() const;
+    void setAnalysisStatus(const juce::String& message, double progress, ProgressState state);
     std::function<void(EditorMode)> onModeChange;
     std::function<void()> onAutoFollowReset;
     std::function<void()> onQuickHelpToggle;
+    std::function<void()> onCancelAnalysis;
 
 private:
     void handleModeClick(EditorMode mode);
@@ -31,6 +34,10 @@ private:
     juce::TextButton previewButton { "Preview" };
     juce::TextButton autoFollowButton { "Auto-Follow" };
     juce::TextButton helpButton { "Quick Help" };
+    juce::TextButton cancelButton { "Cancel" };
+    juce::Label statusLabel;
+    double analysisProgress { 0.0 };
+    juce::ProgressBar analysisProgressBar { analysisProgress };
     juce::TextButton modeButtons[6] {
         juce::TextButton("Pitch/Amplitude"),
         juce::TextButton("Timing"),
@@ -40,4 +47,5 @@ private:
         juce::TextButton("Harmony")
     };
     EditorMode currentMode { EditorMode::PitchAmplitude };
+    ProgressState analysisState { ProgressState::Idle };
 };

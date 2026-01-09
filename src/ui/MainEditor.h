@@ -1,6 +1,7 @@
 #pragma once
 
 #include <juce_gui_basics/juce_gui_basics.h>
+#include <memory>
 #include "../commands/CommandManager.h"
 #include "EditorMode.h"
 #include "ToolbarComponent.h"
@@ -11,6 +12,7 @@
 #include "OverviewComponent.h"
 #include "TimelineComponent.h"
 #include "lookandfeel/EditorLookAndFeel.h"
+#include "../tasks/TaskQueue.h"
 
 class MainEditor final : public juce::Component,
                          public juce::ApplicationCommandTarget
@@ -48,4 +50,6 @@ private:
     bool autoFollowEnabled = true;
 
     EditorMode currentMode { EditorMode::PitchAmplitude };
+    TaskQueue analysisQueue;
+    std::shared_ptr<GuiProgressReporter> analysisReporter;
 };

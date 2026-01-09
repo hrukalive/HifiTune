@@ -81,6 +81,9 @@ target_sources(HiFiTune
         src/pitch/PitchDetector.cpp
         src/pitch/RmvpePitchDetector.cpp
         src/pitch/FcpePitchDetector.cpp
+        src/tasks/AnalysisTask.cpp
+        src/tasks/ProgressReporter.cpp
+        src/tasks/TaskQueue.cpp
         src/ui/LookAndFeel.cpp
         src/ui/lookandfeel/EditorLookAndFeel.cpp
         src/ui/MidiReferenceOverlay.cpp
