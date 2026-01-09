@@ -38,9 +38,21 @@ SidebarComponent::~SidebarComponent()
     setLookAndFeel(nullptr);
 }
 
+void SidebarComponent::paint(juce::Graphics& g)
+{
+    g.fillAll(findColour(juce::ResizableWindow::backgroundColourId));
+    g.setColour(juce::Colour::fromString("#2D3247"));
+    g.drawRoundedRectangle(getLocalBounds().toFloat().reduced(4.0f), 8.0f, 1.2f);
+
+    g.setColour(findColour(juce::GroupComponent::textColourId));
+    g.setFont(14.0f);
+    g.drawText("Sidebar", getLocalBounds().removeFromTop(26).reduced(12, 4), juce::Justification::centredLeft);
+}
+
 void SidebarComponent::resized()
 {
     auto bounds = getLocalBounds().reduced(8);
+    bounds.removeFromTop(24);
     const int groupHeight = (bounds.getHeight() - 24) / 4;
 
     auto settingsBounds = bounds.removeFromTop(groupHeight);

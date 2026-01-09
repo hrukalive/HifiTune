@@ -82,7 +82,7 @@ void NoteViewComponent::paint(juce::Graphics& g)
         g.drawRoundedRectangle(bounds, 4.0f, 1.0f);
     }
 
-    auto barArea = getLocalBounds().toFloat().removeFromTop(24.0f);
+    auto barArea = getLocalBounds().toFloat().removeFromTop(26.0f);
     if (selectedIndex >= 0 && selectedIndex < static_cast<int>(notes.size()))
     {
         g.setColour(juce::Colour::fromString("#5ED4FF"));
@@ -99,9 +99,9 @@ void NoteViewComponent::paint(juce::Graphics& g)
     {
         g.setColour(juce::Colour::fromString("#1B1F2D"));
         g.fillRect(barArea);
-        g.setColour(juce::Colour::fromString("#8F94B2"));
+        g.setColour(juce::Colour::fromString("#B6BCD6"));
         g.setFont(12.0f);
-        g.drawFittedText("Click a note to select. Mode: " + toString(currentMode),
+        g.drawFittedText("Note Bar · Mode: " + toString(currentMode) + " · Click a note to select",
                          barArea.toNearestInt(),
                          juce::Justification::centredLeft,
                          1);
@@ -132,7 +132,7 @@ void NoteViewComponent::mouseDown(const juce::MouseEvent& event)
 juce::Rectangle<float> NoteViewComponent::getNoteArea() const
 {
     auto bounds = getLocalBounds().toFloat().reduced(8.0f);
-    bounds.removeFromTop(24.0f);
+    bounds.removeFromTop(26.0f);
     return bounds;
 }
 

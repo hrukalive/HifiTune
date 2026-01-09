@@ -10,6 +10,7 @@ public:
     ToolbarComponent();
     ~ToolbarComponent() override;
 
+    void paint(juce::Graphics& g) override;
     void resized() override;
 
     void setMode(EditorMode mode);

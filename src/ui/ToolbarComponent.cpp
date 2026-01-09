@@ -35,6 +35,24 @@ ToolbarComponent::~ToolbarComponent()
     setLookAndFeel(nullptr);
 }
 
+void ToolbarComponent::paint(juce::Graphics& g)
+{
+    g.fillAll(findColour(juce::ResizableWindow::backgroundColourId));
+
+    auto bounds = getLocalBounds().reduced(8);
+    auto transportArea = bounds.removeFromLeft(240);
+    auto modeArea = bounds.removeFromLeft(bounds.getWidth() - 220);
+
+    g.setColour(juce::Colour::fromString("#2D3247"));
+    g.drawRoundedRectangle(transportArea.toFloat(), 6.0f, 1.0f);
+    g.drawRoundedRectangle(modeArea.toFloat(), 6.0f, 1.0f);
+
+    g.setColour(findColour(juce::Label::textColourId));
+    g.setFont(12.0f);
+    g.drawText("Transport", transportArea.removeFromTop(18), juce::Justification::centredLeft);
+    g.drawText("Modes", modeArea.removeFromTop(18), juce::Justification::centredLeft);
+}
+
 void ToolbarComponent::setMode(EditorMode mode)
 {
     currentMode = mode;

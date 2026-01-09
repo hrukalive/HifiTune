@@ -91,12 +91,12 @@ void PitchViewComponent::paint(juce::Graphics& g)
         g.strokePath(pitchPath, juce::PathStrokeType(2.0f));
     }
 
-    g.setColour(juce::Colour::fromString("#C7CCE0"));
+    g.setColour(juce::Colour::fromString("#E3E7FF"));
     g.setFont(13.0f);
-    g.drawFittedText("Pitch View · Mode: " + toString(currentMode),
-                     bounds.toNearestInt(),
-                     juce::Justification::topLeft,
-                     1);
+    g.drawText("Pitch View", bounds.removeFromTop(18).toNearestInt(), juce::Justification::centredLeft);
+    g.setColour(juce::Colour::fromString("#8F94B2"));
+    g.setFont(11.0f);
+    g.drawText("Mode: " + toString(currentMode), bounds.removeFromTop(16).toNearestInt(), juce::Justification::centredLeft);
 }
 
 void PitchViewComponent::resized()

@@ -15,6 +15,10 @@ void TimelineComponent::paint(juce::Graphics& g)
     g.fillAll(findColour(juce::ResizableWindow::backgroundColourId));
 
     auto bounds = getLocalBounds().toFloat().reduced(8.0f, 4.0f);
+    g.setColour(findColour(juce::Label::textColourId));
+    g.setFont(11.0f);
+    g.drawText("Time", bounds.removeFromLeft(40).toNearestInt(), juce::Justification::centredLeft);
+    bounds.removeFromLeft(4.0f);
     const int bars = 8;
 
     for (int bar = 0; bar <= bars; ++bar)

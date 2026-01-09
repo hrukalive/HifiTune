@@ -22,6 +22,11 @@ void OverviewComponent::paint(juce::Graphics& g)
     g.fillAll(findColour(juce::ResizableWindow::backgroundColourId));
 
     auto bounds = getLocalBounds().toFloat().reduced(8.0f);
+    g.setColour(juce::Colour::fromString("#C7CCE0"));
+    g.setFont(12.0f);
+    g.drawText("Overview", bounds.removeFromTop(18).toNearestInt(), juce::Justification::centredLeft);
+
+    bounds.removeFromTop(4.0f);
     g.setColour(juce::Colour::fromString("#2E3350"));
     g.fillRoundedRectangle(bounds, 6.0f);
 
