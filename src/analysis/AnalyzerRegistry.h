@@ -8,7 +8,7 @@
 
 #include "MidiNoteExtractor.h"
 #include "PitchAnalyzer.h"
-#include "../separation/HarmonicNoiseSeparator.h"
+#include "HarmonicNoiseSeparator.h"
 
 class AnalyzerRegistry
 {

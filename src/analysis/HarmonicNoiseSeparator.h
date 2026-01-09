@@ -5,7 +5,7 @@
 #include <juce_audio_basics/juce_audio_basics.h>
 #include <juce_data_structures/juce_data_structures.h>
 
-#include "../analysis/AudioBufferSource.h"
+#include "AudioBufferSource.h"
 #include "../model/AnalysisConfigState.h"
 #include "../model/SegmentState.h"
 #include "../model/TensionState.h"

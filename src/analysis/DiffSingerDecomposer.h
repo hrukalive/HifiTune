@@ -2,10 +2,10 @@
 
 #include <juce_audio_basics/juce_audio_basics.h>
 
-#include "../analysis/MelSpectrogram.h"
+#include "HarmonicNoiseSeparator.h"
+#include "MelSpectrogram.h"
 #include "../model/AnalysisConfigState.h"
 #include "../model/TensionState.h"
-#include "HarmonicNoiseSeparator.h"
 
 class DiffSingerDecomposer
 {

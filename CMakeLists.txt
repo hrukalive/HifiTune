@@ -98,9 +98,8 @@ target_sources(HiFiTune
         src/model/MidiReferenceState.cpp
         src/model/PitchCurveState.cpp
         src/model/TensionState.cpp
-        src/separation/DiffSingerDecomposer.cpp
-        src/separation/HarmonicNoiseSeparator.cpp
-        src/separation/VocalRemoverSeparator.cpp
+        src/analysis/DiffSingerDecomposer.cpp
+        src/analysis/HarmonicNoiseSeparator.cpp
         src/commands/CommandManager.cpp
 )
 
