@@ -82,7 +82,15 @@ target_sources(HiFiTune
         src/pitch/RmvpePitchDetector.cpp
         src/pitch/FcpePitchDetector.cpp
         src/ui/LookAndFeel.cpp
+        src/ui/lookandfeel/EditorLookAndFeel.cpp
         src/ui/MidiReferenceOverlay.cpp
+        src/ui/MainEditor.cpp
+        src/ui/ToolbarComponent.cpp
+        src/ui/SidebarComponent.cpp
+        src/ui/NoteViewComponent.cpp
+        src/ui/PitchViewComponent.cpp
+        src/ui/OverviewComponent.cpp
+        src/ui/TimelineComponent.cpp
         src/vocoder/Vocoder.cpp
         src/vocoder/NsfHifiGanVocoder.cpp
         src/plugin/PluginProcessor.cpp
