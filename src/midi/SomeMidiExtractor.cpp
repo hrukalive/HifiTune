@@ -43,12 +43,13 @@ std::vector<MidiNoteState> SomeMidiExtractor::extractNotes(const juce::File& mid
     if (track == nullptr)
         return notes;
 
-    track->updateMatchedPairs();
+    juce::MidiMessageSequence sequence(*track);
+    sequence.updateMatchedPairs();
 
     const auto timeFormat = file.getTimeFormat();
-    for (int eventIndex = 0; eventIndex < track->getNumEvents(); ++eventIndex)
+    for (int eventIndex = 0; eventIndex < sequence.getNumEvents(); ++eventIndex)
     {
-        auto* event = track->getEventPointer(eventIndex);
+        auto* event = sequence.getEventPointer(eventIndex);
         if (event == nullptr || !event->message.isNoteOn())
             continue;
 
