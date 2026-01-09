@@ -89,6 +89,7 @@ target_sources(HiFiTune
         src/ui/SidebarComponent.cpp
         src/ui/NoteViewComponent.cpp
         src/ui/PitchViewComponent.cpp
+        src/ui/history/HistoryComponent.cpp
         src/ui/QuickHelpOverlay.cpp
         src/ui/OverviewComponent.cpp
         src/ui/TimelineComponent.cpp

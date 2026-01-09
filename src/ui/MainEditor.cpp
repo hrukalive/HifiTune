@@ -37,6 +37,7 @@ MainEditor::MainEditor()
     };
 
     toolbar.setAutoFollowEnabled(autoFollowEnabled);
+    sidebar.setUndoManager(&undoManager);
     updateQuickHelpContent();
 }
 
@@ -194,10 +195,10 @@ bool MainEditor::perform(const InvocationInfo& info)
             toolbar.togglePlay();
             return true;
         case CommandIDs::undo:
-            juce::Logger::writeToLog("Undo triggered.");
+            undoManager.undo();
             return true;
         case CommandIDs::redo:
-            juce::Logger::writeToLog("Redo triggered.");
+            undoManager.redo();
             return true;
         case CommandIDs::savePreset:
             juce::Logger::writeToLog("Save preset triggered.");

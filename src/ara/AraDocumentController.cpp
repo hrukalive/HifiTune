@@ -149,9 +149,9 @@ void AraDocumentController::didUpdateRegionSequenceProperties(juce::ARARegionSeq
     if (properties == nullptr)
         return;
 
-    const auto trackKey = createStableId(regionSequence);
+    const auto trackKey = trackKeyForRegionSequence(regionSequence);
     const auto name = juce::String(properties->name);
-    regionMapper.syncTrack(trackKey, name, currentUndoManager());
+    regionMapper.syncTrack(trackKey, name, currentUndoManagerForTrack(trackKey));
 }
 
 void AraDocumentController::didAddPlaybackRegionToRegionSequence(juce::ARARegionSequence*,
@@ -167,7 +167,8 @@ void AraDocumentController::willRemovePlaybackRegionFromRegionSequence(juce::ARA
         return;
 
     const auto regionKey = createStableId(playbackRegion);
-    regionMapper.removeRegion(regionKey, currentUndoManager());
+    const auto trackKey = trackKeyForPlaybackRegion(playbackRegion);
+    regionMapper.removeRegion(regionKey, currentUndoManagerForTrack(trackKey));
 }
 
 void AraDocumentController::didUpdatePlaybackRegionProperties(juce::ARAPlaybackRegion* playbackRegion)
@@ -198,13 +199,46 @@ void AraDocumentController::updatePlaybackRegion(juce::ARAPlaybackRegion* playba
     info.startBeat = static_cast<double>(properties->startInPlaybackTime);
     info.lengthBeats = static_cast<double>(properties->durationInPlaybackTime);
 
-    regionMapper.mapRegionToClip(info, currentUndoManager());
-    regionMapper.rebuildSegmentsForClip(info, currentUndoManager());
+    const auto trackKey = trackKeyForPlaybackRegion(playbackRegion);
+    auto* undoManager = currentUndoManagerForTrack(trackKey);
+    regionMapper.mapRegionToClip(info, undoManager);
+    regionMapper.rebuildSegmentsForClip(info, undoManager);
 }
 
-juce::UndoManager* AraDocumentController::currentUndoManager()
+juce::UndoManager* AraDocumentController::currentUndoManagerForTrack(const juce::String& trackKey)
 {
-    return activeTransaction ? &projectState.getUndoManager() : nullptr;
+    if (!activeTransaction)
+        return nullptr;
+
+    if (trackKey.isEmpty())
+        return &projectState.getUndoManager();
+
+    auto existing = std::find_if(trackUndoManagers.begin(), trackUndoManagers.end(),
+                                 [&trackKey](const TrackUndoHistory& entry) { return entry.trackKey == trackKey; });
+    if (existing != trackUndoManagers.end())
+        return existing->undoManager.get();
+
+    trackUndoManagers.push_back({trackKey, std::make_unique<juce::UndoManager>()});
+    return trackUndoManagers.back().undoManager.get();
+}
+
+juce::String AraDocumentController::trackKeyForRegionSequence(const juce::ARARegionSequence* regionSequence) const
+{
+    if (regionSequence == nullptr)
+        return {};
+
+    return createStableId(regionSequence);
+}
+
+juce::String AraDocumentController::trackKeyForPlaybackRegion(const juce::ARAPlaybackRegion* playbackRegion) const
+{
+    if (playbackRegion == nullptr)
+        return {};
+
+    if (const auto* regionSequence = playbackRegion->getRegionSequence())
+        return trackKeyForRegionSequence(regionSequence);
+
+    return {};
 }
 
 const ARA::ARAFactory* JUCE_CALLTYPE createARAFactory()
