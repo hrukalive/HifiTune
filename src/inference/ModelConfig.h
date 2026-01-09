@@ -9,6 +9,7 @@ class ModelConfig
 public:
     static std::optional<ModelConfig> loadFromDirectory(const juce::File& directory);
     static std::optional<ModelConfig> loadFromModelFile(const juce::File& modelFile);
+    static std::optional<ModelConfig> loadFromPath(const juce::File& path);
 
     const juce::File& getModelFile() const noexcept;
     const juce::File& getConfigFile() const noexcept;

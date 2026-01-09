@@ -76,6 +76,9 @@ target_sources(HiFiTune
         src/inference/ModelLoader.cpp
         src/inference/ModelRegistry.cpp
         src/inference/OnnxRuntimeEngine.cpp
+        src/pitch/PitchDetector.cpp
+        src/pitch/RmvpePitchDetector.cpp
+        src/pitch/FcpePitchDetector.cpp
         src/ui/LookAndFeel.cpp
         src/plugin/PluginProcessor.cpp
         src/plugin/PluginEditor.cpp

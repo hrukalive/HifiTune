@@ -20,6 +20,18 @@ std::unique_ptr<PitchDetectorModel> ModelLoader::loadPitchDetector(const juce::F
     return model;
 }
 
+std::unique_ptr<PitchDetectorModel> ModelLoader::loadPitchDetectorFromPath(const juce::File& path)
+{
+    auto config = ModelConfig::loadFromPath(path);
+    if (! config.has_value())
+        return {};
+
+    auto model = std::make_unique<PitchDetectorModel>();
+    model->config = *config;
+    model->engine = getOrCreateEngine(config->getModelFile());
+    return model;
+}
+
 std::unique_ptr<VocoderModel> ModelLoader::loadVocoder(const juce::File& directory)
 {
     auto config = ModelConfig::loadFromDirectory(directory);
