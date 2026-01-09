@@ -42,6 +42,7 @@ public:
     explicit ModelLoader(Options options = {});
 
     std::unique_ptr<PitchDetectorModel> loadPitchDetector(const juce::File& directory);
+    std::unique_ptr<PitchDetectorModel> loadPitchDetectorFromPath(const juce::File& path);
     std::unique_ptr<VocoderModel> loadVocoder(const juce::File& directory);
     std::unique_ptr<SeparatorModel> loadSeparator(const juce::File& directory);
 

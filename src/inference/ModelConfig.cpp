@@ -19,6 +19,47 @@ namespace
         return {};
     }
 
+    juce::File findDirectoryConfigFile(const juce::File& directory)
+    {
+        if (! directory.isDirectory())
+            return {};
+
+        auto jsonConfig = directory.getChildFile("config.json");
+        if (jsonConfig.existsAsFile())
+            return jsonConfig;
+
+        auto yamlConfig = directory.getChildFile("config.yaml");
+        if (yamlConfig.existsAsFile())
+            return yamlConfig;
+
+        auto ymlConfig = directory.getChildFile("config.yml");
+        if (ymlConfig.existsAsFile())
+            return ymlConfig;
+
+        auto candidates = directory.findChildFiles(juce::File::findFiles, false, "*.json");
+        if (! candidates.isEmpty())
+            return candidates[0];
+
+        candidates = directory.findChildFiles(juce::File::findFiles, false, "*.yaml");
+        if (! candidates.isEmpty())
+            return candidates[0];
+
+        candidates = directory.findChildFiles(juce::File::findFiles, false, "*.yml");
+        if (! candidates.isEmpty())
+            return candidates[0];
+
+        return {};
+    }
+
+    juce::File findConfigFileForModel(const juce::File& modelFile)
+    {
+        auto adjacent = findAdjacentConfigFile(modelFile);
+        if (adjacent.existsAsFile())
+            return adjacent;
+
+        return findDirectoryConfigFile(modelFile.getParentDirectory());
+    }
+
     juce::File findModelFile(const juce::File& directory)
     {
         auto modelFile = directory.getChildFile("model.onnx");
@@ -49,12 +90,20 @@ std::optional<ModelConfig> ModelConfig::loadFromModelFile(const juce::File& mode
 
     ModelConfig config;
     config.modelFile = modelFile;
-    config.configFile = findAdjacentConfigFile(modelFile);
+    config.configFile = findConfigFileForModel(modelFile);
 
     if (config.configFile.existsAsFile())
         config.loadConfigFile(config.configFile);
 
     return config;
+}
+
+std::optional<ModelConfig> ModelConfig::loadFromPath(const juce::File& path)
+{
+    if (path.isDirectory())
+        return loadFromDirectory(path);
+
+    return loadFromModelFile(path);
 }
 
 const juce::File& ModelConfig::getModelFile() const noexcept
