@@ -6,6 +6,8 @@ namespace CommandIDs
 {
     static constexpr juce::CommandID undo = 0x1000;
     static constexpr juce::CommandID redo = 0x1001;
+    static constexpr juce::CommandID savePreset = 0x1002;
+    static constexpr juce::CommandID playToggle = 0x1003;
 
     static constexpr juce::CommandID selectMode = 0x1100;
     static constexpr juce::CommandID drawMode = 0x1101;
@@ -20,6 +22,7 @@ namespace CommandIDs
 
     static constexpr juce::CommandID autoZoomSelection = 0x1300;
     static constexpr juce::CommandID autoZoomAll = 0x1301;
+    static constexpr juce::CommandID autoFollowReset = 0x1302;
 
     static constexpr juce::CommandID previewNote = 0x1400;
     static constexpr juce::CommandID previewTrack = 0x1401;
@@ -28,4 +31,5 @@ namespace CommandIDs
     static constexpr juce::CommandID toggleMetronome = 0x1501;
     static constexpr juce::CommandID toggleLoop = 0x1502;
     static constexpr juce::CommandID toggleAutoScroll = 0x1503;
+    static constexpr juce::CommandID toggleQuickHelp = 0x1504;
 }

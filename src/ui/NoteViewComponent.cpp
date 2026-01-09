@@ -1,4 +1,5 @@
 #include "NoteViewComponent.h"
+#include <cmath>
 
 NoteViewComponent::NoteViewComponent()
 {
@@ -12,6 +13,10 @@ NoteViewComponent::NoteViewComponent()
         { 4.8, 1.2, 67, false, true },
         { 6.1, 1.3, 69, false, false }
     };
+
+    viewport.setMinimumViewSize(0.5, 1.0);
+    updateContentRanges();
+    viewport.fitToContent();
 }
 
 NoteViewComponent::~NoteViewComponent()
@@ -25,21 +30,33 @@ void NoteViewComponent::setMode(EditorMode mode)
     repaint();
 }
 
+void NoteViewComponent::setAutoFollow(bool enabled)
+{
+    updateAutoFollowState(enabled, true);
+}
+
 void NoteViewComponent::paint(juce::Graphics& g)
 {
     g.fillAll(findColour(juce::ResizableWindow::backgroundColourId));
 
     const auto noteArea = getNoteArea();
-    const int rows = 24;
-    const float rowHeight = noteArea.getHeight() / rows;
+    const auto viewX = viewport.getViewX();
+    const auto viewY = viewport.getViewY();
+    const double viewHeight = viewY.getLength();
+    const float rowHeight = viewHeight > 0.0 ? noteArea.getHeight() / static_cast<float>(viewHeight) : noteArea.getHeight();
+    const int maxNote = static_cast<int>(std::ceil(viewY.getEnd()));
+    const int minNote = static_cast<int>(std::floor(viewY.getStart()));
 
-    for (int row = 0; row < rows; ++row)
+    for (int note = maxNote; note >= minNote; --note)
     {
-        const int midiNote = 84 - row;
-        const float y = noteArea.getY() + row * rowHeight;
-        juce::Rectangle<float> rowRect(noteArea.getX(), y, noteArea.getWidth(), rowHeight);
+        const float yTop = noteArea.getY()
+                           + static_cast<float>(((viewY.getEnd() - note) / viewHeight) * noteArea.getHeight());
+        const float yBottom = noteArea.getY()
+                              + static_cast<float>(((viewY.getEnd() - (note - 1)) / viewHeight) * noteArea.getHeight());
+        const float height = juce::jmax(1.0f, yBottom - yTop);
+        juce::Rectangle<float> rowRect(noteArea.getX(), yTop, noteArea.getWidth(), height);
 
-        if (isScaleTone(midiNote))
+        if (isScaleTone(note))
             g.setColour(juce::Colour::fromString("#1C2030"));
         else
             g.setColour(juce::Colour::fromString("#141723"));
@@ -48,16 +65,19 @@ void NoteViewComponent::paint(juce::Graphics& g)
     }
 
     g.setColour(juce::Colour::fromString("#2A2E42"));
-    for (int row = 0; row <= rows; ++row)
+    for (int note = maxNote; note >= minNote; --note)
     {
-        const float y = noteArea.getY() + row * rowHeight;
+        const float y = noteArea.getY()
+                        + static_cast<float>(((viewY.getEnd() - note) / viewHeight) * noteArea.getHeight());
         g.drawLine(noteArea.getX(), y, noteArea.getRight(), y, 0.5f);
     }
 
-    const double viewBeats = 8.0;
-    for (int beat = 0; beat <= 8; ++beat)
+    const int startBeat = static_cast<int>(std::floor(viewX.getStart()));
+    const int endBeat = static_cast<int>(std::ceil(viewX.getEnd()));
+    for (int beat = startBeat; beat <= endBeat; ++beat)
     {
-        const float x = noteArea.getX() + static_cast<float>((beat / viewBeats) * noteArea.getWidth());
+        const float x = noteArea.getX()
+                        + static_cast<float>(((beat - viewX.getStart()) / viewX.getLength()) * noteArea.getWidth());
         g.setColour(beat % 4 == 0 ? juce::Colour::fromString("#3B405A") : juce::Colour::fromString("#24283B"));
         g.drawLine(x, noteArea.getY(), x, noteArea.getBottom(), 1.0f);
     }
@@ -110,6 +130,8 @@ void NoteViewComponent::paint(juce::Graphics& g)
 
 void NoteViewComponent::resized()
 {
+    if (autoFollowEnabled)
+        viewport.fitToContent();
 }
 
 void NoteViewComponent::mouseDown(const juce::MouseEvent& event)
@@ -129,6 +151,15 @@ void NoteViewComponent::mouseDown(const juce::MouseEvent& event)
     repaint();
 }
 
+void NoteViewComponent::mouseWheelMove(const juce::MouseEvent& event, const juce::MouseWheelDetails& wheel)
+{
+    if (viewport.handleWheel(wheel, event.mods))
+    {
+        updateAutoFollowState(false, false);
+        repaint();
+    }
+}
+
 juce::Rectangle<float> NoteViewComponent::getNoteArea() const
 {
     auto bounds = getLocalBounds().toFloat().reduced(8.0f);
@@ -138,16 +169,18 @@ juce::Rectangle<float> NoteViewComponent::getNoteArea() const
 
 juce::Rectangle<float> NoteViewComponent::getNoteBounds(const Note& note, const juce::Rectangle<float>& area) const
 {
-    const double viewBeats = 8.0;
-    const int rows = 24;
-    const float rowHeight = area.getHeight() / rows;
+    const auto viewX = viewport.getViewX();
+    const auto viewY = viewport.getViewY();
+    const double viewHeight = viewY.getLength();
 
-    const float x = area.getX() + static_cast<float>((note.startBeat / viewBeats) * area.getWidth());
-    const float width = static_cast<float>((note.durationBeats / viewBeats) * area.getWidth());
-    const int row = juce::jlimit(0, rows - 1, 84 - note.pitch);
-    const float y = area.getY() + row * rowHeight;
+    const float x = area.getX()
+                    + static_cast<float>(((note.startBeat - viewX.getStart()) / viewX.getLength()) * area.getWidth());
+    const float width = static_cast<float>((note.durationBeats / viewX.getLength()) * area.getWidth());
+    const float y = area.getY()
+                    + static_cast<float>(((viewY.getEnd() - note.pitch) / viewHeight) * area.getHeight());
+    const float height = static_cast<float>(area.getHeight() / viewHeight);
 
-    return { x + 2.0f, y + 2.0f, width - 4.0f, rowHeight - 4.0f };
+    return { x + 2.0f, y + 2.0f, width - 4.0f, height - 4.0f };
 }
 
 bool NoteViewComponent::isScaleTone(int midiNote) const
@@ -161,4 +194,44 @@ bool NoteViewComponent::isScaleTone(int midiNote) const
     }
 
     return false;
+}
+
+void NoteViewComponent::updateContentRanges()
+{
+    if (notes.empty())
+    {
+        viewport.setContentRanges({ 0.0, 8.0 }, { 60.0, 84.0 });
+        return;
+    }
+
+    double minBeat = notes.front().startBeat;
+    double maxBeat = notes.front().startBeat + notes.front().durationBeats;
+    int minPitch = notes.front().pitch;
+    int maxPitch = notes.front().pitch;
+
+    for (const auto& note : notes)
+    {
+        minBeat = juce::jmin(minBeat, note.startBeat);
+        maxBeat = juce::jmax(maxBeat, note.startBeat + note.durationBeats);
+        minPitch = juce::jmin(minPitch, note.pitch);
+        maxPitch = juce::jmax(maxPitch, note.pitch);
+    }
+
+    viewport.setContentRanges({ minBeat, maxBeat }, { static_cast<double>(minPitch), static_cast<double>(maxPitch + 1) });
+
+    if (autoFollowEnabled)
+        viewport.fitToContent();
+}
+
+void NoteViewComponent::updateAutoFollowState(bool enabled, bool refit)
+{
+    if (autoFollowEnabled == enabled)
+        return;
+
+    autoFollowEnabled = enabled;
+    if (autoFollowEnabled && refit)
+        viewport.fitToContent();
+
+    if (onAutoFollowChanged)
+        onAutoFollowChanged(autoFollowEnabled);
 }
