@@ -17,8 +17,7 @@ HistoryComponent::HistoryComponent()
             "Clear History",
             "This will remove all undo and redo steps. Do you want to continue?",
             "Clear",
-            "Cancel",
-            this);
+            "Cancel");
 
         if (!confirmed)
             return;
@@ -138,7 +137,7 @@ void HistoryComponent::refreshHistory()
 
     historyList.updateContent();
     const auto currentIndex = currentHistoryIndex();
-    if (currentIndex >= 0 && currentIndex < historyList.getNumRows())
+    if (currentIndex >= 0 && currentIndex < static_cast<int>(entries.size()))
         historyList.selectRow(currentIndex, juce::NotificationType::dontSendNotification);
     historyList.repaint();
 }
