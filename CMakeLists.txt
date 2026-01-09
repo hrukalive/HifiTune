@@ -66,7 +66,6 @@ target_sources(HiFiTune
         src/analysis/AnalysisPipeline.cpp
         src/analysis/AnalyzerRegistry.cpp
         src/analysis/AudioBufferSource.cpp
-        src/analysis/HarmonicNoiseSeparator.cpp
         src/analysis/MelSpectrogram.cpp
         src/analysis/MidiNoteExtractor.cpp
         src/analysis/PitchAnalyzer.cpp
@@ -99,6 +98,9 @@ target_sources(HiFiTune
         src/model/MidiReferenceState.cpp
         src/model/PitchCurveState.cpp
         src/model/TensionState.cpp
+        src/separation/DiffSingerDecomposer.cpp
+        src/separation/HarmonicNoiseSeparator.cpp
+        src/separation/VocalRemoverSeparator.cpp
         src/commands/CommandManager.cpp
 )
 

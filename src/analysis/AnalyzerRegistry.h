@@ -6,9 +6,9 @@
 
 #include <juce_core/juce_core.h>
 
-#include "HarmonicNoiseSeparator.h"
 #include "MidiNoteExtractor.h"
 #include "PitchAnalyzer.h"
+#include "../separation/HarmonicNoiseSeparator.h"
 
 class AnalyzerRegistry
 {

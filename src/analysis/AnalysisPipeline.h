@@ -7,6 +7,7 @@
 #include "AnalyzerRegistry.h"
 #include "SilenceSegmenter.h"
 #include "../model/AnalysisConfigState.h"
+#include "../model/TensionState.h"
 
 class AnalysisPipeline
 {
@@ -24,6 +25,7 @@ public:
                    const juce::String& pitchAnalyzerId,
                    const juce::String& midiExtractorId,
                    const juce::String& separatorId,
+                   const TensionState& tension,
                    juce::UndoManager* undoManager);
 
     static juce::ValueTree createAnalysisTree();
