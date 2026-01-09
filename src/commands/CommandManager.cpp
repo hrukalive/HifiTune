@@ -23,5 +23,7 @@ void CommandManager::registerTarget(juce::ApplicationCommandTarget* target)
 
 juce::KeyPressMappingSet& CommandManager::getKeyMappings()
 {
-    return commandManager.getKeyMappings();
+    auto* mappings = commandManager.getKeyMappings();
+    jassert(mappings != nullptr);
+    return *mappings;
 }

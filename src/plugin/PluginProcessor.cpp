@@ -96,7 +96,6 @@ juce::AudioProcessorEditor* HifiTuneAudioProcessor::createEditor()
 
 void HifiTuneAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
 {
-    destData.clear();
 }
 
 void HifiTuneAudioProcessor::setStateInformation(const void*, int)

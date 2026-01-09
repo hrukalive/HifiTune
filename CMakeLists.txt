@@ -97,14 +97,14 @@ target_compile_definitions(HiFiTune
 
 target_link_libraries(HiFiTune
     PRIVATE
-        AudioPluginData
         HifiTuneResources
         juce::juce_audio_basics
         juce::juce_audio_devices
         juce::juce_audio_formats
-        juce::juce_audio_utils
         juce::juce_audio_processors
         juce::juce_audio_plugin_client
+        juce::juce_audio_utils
+        juce::juce_data_structures
         juce::juce_dsp
         juce::juce_gui_basics
         juce::juce_gui_extra
