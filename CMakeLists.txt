@@ -67,6 +67,14 @@ target_sources(HiFiTune
         src/plugin/PluginProcessor.cpp
         src/plugin/PluginEditor.cpp
         src/ara/AraIntegration.cpp
+        src/model/ProjectState.cpp
+        src/model/TrackState.cpp
+        src/model/ClipState.cpp
+        src/model/SegmentState.cpp
+        src/model/NoteState.cpp
+        src/model/PitchCurveState.cpp
+        src/model/TensionState.cpp
+        src/commands/CommandManager.cpp
 )
 
 juce_add_binary_data(HifiTuneResources
@@ -90,6 +98,7 @@ target_compile_definitions(HiFiTune
 target_link_libraries(HiFiTune
     PRIVATE
         AudioPluginData
+        HifiTuneResources
         juce::juce_audio_basics
         juce::juce_audio_devices
         juce::juce_audio_formats
