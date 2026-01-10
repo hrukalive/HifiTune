@@ -35,7 +35,7 @@ private:
     void getCommandInfo(juce::CommandID commandID, juce::ApplicationCommandInfo& result) override;
     bool perform(const InvocationInfo& info) override;
 
-    EditorLookAndFeel lookAndFeel;
+    // EditorLookAndFeel lookAndFeel;
     CommandManager commandManager;
     ToolbarComponent toolbar;
     SidebarComponent sidebar;

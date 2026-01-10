@@ -54,6 +54,9 @@ ToolbarComponent::ToolbarComponent()
 
     statusLabel.setText("Ready", juce::NotificationType::dontSendNotification);
     statusLabel.setJustificationType(juce::Justification::centredLeft);
+    statusLabel.setColour(juce::Label::textColourId, findColour(juce::Label::textColourId));
+    statusLabel.setFont(juce::Font(12.0f));
+    statusLabel.setOpaque(false);
     cancelButton.setEnabled(false);
 }
 

@@ -36,3 +36,5 @@ cmake-build-*/
 
 **/__pycache__/
 vcpkg_installed/
+externals/models/
+VoviousManual.pdf

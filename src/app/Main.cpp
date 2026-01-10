@@ -1,7 +1,10 @@
+#define JUCE_USE_CUSTOM_PLUGIN_STANDALONE_APP 1
+
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_audio_utils/juce_audio_utils.h>
 
 #include "../ui/LookAndFeel.h"
+#include "../ui/MainEditor.h"
 
 class HifiTuneApplication final : public juce::JUCEApplication
 {
@@ -14,8 +17,8 @@ public:
 
     void initialise(const juce::String&) override
     {
-        lookAndFeel = std::make_unique<HifiTuneLookAndFeel>();
-        juce::LookAndFeel::setDefaultLookAndFeel(lookAndFeel.get());
+        // lookAndFeel = std::make_unique<HifiTuneLookAndFeel>();
+        // juce::LookAndFeel::setDefaultLookAndFeel(lookAndFeel.get());
 
         mainWindow = std::make_unique<MainWindow>(getApplicationName());
     }
@@ -23,8 +26,8 @@ public:
     void shutdown() override
     {
         mainWindow = nullptr;
-        juce::LookAndFeel::setDefaultLookAndFeel(nullptr);
-        lookAndFeel = nullptr;
+        // juce::LookAndFeel::setDefaultLookAndFeel(nullptr);
+        // lookAndFeel = nullptr;
     }
 
     void systemRequestedQuit() override
@@ -45,7 +48,8 @@ private:
                              juce::DocumentWindow::allButtons)
         {
             setUsingNativeTitleBar(true);
-            setContentOwned(new juce::Component(), true);
+            // Use the actual MainEditor as the content component so the standalone app shows the real UI
+            setContentOwned(new MainEditor(), true);
             centreWithSize(720, 480);
             setVisible(true);
         }
@@ -56,7 +60,7 @@ private:
         }
     };
 
-    std::unique_ptr<HifiTuneLookAndFeel> lookAndFeel;
+    // std::unique_ptr<HifiTuneLookAndFeel> lookAndFeel;
     std::unique_ptr<MainWindow> mainWindow;
 };
 

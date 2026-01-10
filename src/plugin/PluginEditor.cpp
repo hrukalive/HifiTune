@@ -12,7 +12,7 @@ HifiTuneAudioProcessorEditor::~HifiTuneAudioProcessorEditor() = default;
 
 void HifiTuneAudioProcessorEditor::paint(juce::Graphics& g)
 {
-    g.fillAll(juce::Colour::fromString("#12131A"));
+    // g.fillAll(juce::Colour::fromString("#12131A"));
 }
 
 void HifiTuneAudioProcessorEditor::resized()

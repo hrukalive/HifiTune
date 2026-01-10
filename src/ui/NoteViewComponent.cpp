@@ -14,7 +14,8 @@ NoteViewComponent::NoteViewComponent()
         { 6.1, 1.3, 69, false, false }
     };
 
-    viewport.setMinimumViewSize(0.5, 1.0);
+    // Match PitchView's sensible defaults to allow fine zooming and small vertical ranges
+    viewport.setMinimumViewSize(0.05, 0.05);
     updateContentRanges();
     viewport.fitToContent();
 }

@@ -3,70 +3,72 @@
 
 MainEditor::MainEditor()
 {
-    setLookAndFeel(&lookAndFeel);
+    // setLookAndFeel(&lookAndFeel);
     setWantsKeyboardFocus(true);
 
     commandManager.registerTarget(this);
     commandManager.getKeyMappings().resetToDefaultMappings();
     addKeyListener(&commandManager.getKeyMappings());
 
-    toolbar.onModeChange = [this](EditorMode mode) { setMode(mode); };
-    toolbar.onAutoFollowReset = [this] { setAutoFollow(true); };
-    toolbar.onQuickHelpToggle = [this] { toggleQuickHelp(); };
-    toolbar.onCancelAnalysis = [this] { analysisQueue.cancelCurrent(); };
-
-    pitchView.onAutoFollowChanged = [this](bool enabled) { setAutoFollow(enabled); };
-    noteView.onAutoFollowChanged = [this](bool enabled) { setAutoFollow(enabled); };
-
-    modeLabel.setText("Mode: " + toString(currentMode), juce::NotificationType::dontSendNotification);
-    modeLabel.setJustificationType(juce::Justification::centredRight);
-
-    addAndMakeVisible(toolbar);
-    addAndMakeVisible(sidebar);
-    addAndMakeVisible(pitchView);
-    addAndMakeVisible(noteView);
-    addAndMakeVisible(overview);
-    addAndMakeVisible(timeline);
-    addAndMakeVisible(modeLabel);
-    addAndMakeVisible(quickHelpOverlay);
-    quickHelpOverlay.setInterceptsMouseClicks(true, true);
-    quickHelpOverlay.setVisible(false);
-    quickHelpOverlay.onDismiss = [this]
-    {
-        quickHelpVisible = false;
-        quickHelpOverlay.setVisible(false);
-    };
-
-    toolbar.setAutoFollowEnabled(autoFollowEnabled);
-    sidebar.setUndoManager(&undoManager);
-    updateQuickHelpContent();
-
-    analysisReporter = std::make_shared<GuiProgressReporter>(
-        [this](double progress, const juce::String& message, ProgressState state)
-        {
-            juce::String displayMessage = message;
-            if (displayMessage.isEmpty())
-            {
-                switch (state)
-                {
-                    case ProgressState::Active:
-                        displayMessage = "Running analysis...";
-                        break;
-                    case ProgressState::Completed:
-                        displayMessage = "Analysis completed";
-                        break;
-                    case ProgressState::Cancelled:
-                        displayMessage = "Analysis cancelled";
-                        break;
-                    case ProgressState::Idle:
-                        displayMessage = "Ready";
-                        break;
-                }
-            }
-            toolbar.setAnalysisStatus(displayMessage, progress, state);
-        });
-
-    toolbar.setAnalysisStatus("Ready", 0.0, ProgressState::Idle);
+    // toolbar.onModeChange = [this](EditorMode mode) { setMode(mode); };
+    // toolbar.onAutoFollowReset = [this] { setAutoFollow(true); };
+    // toolbar.onQuickHelpToggle = [this] { toggleQuickHelp(); };
+    // toolbar.onCancelAnalysis = [this] { analysisQueue.cancelCurrent(); };
+    //
+    // pitchView.onAutoFollowChanged = [this](bool enabled) { setAutoFollow(enabled); };
+    // noteView.onAutoFollowChanged = [this](bool enabled) { setAutoFollow(enabled); };
+    //
+    // modeLabel.setText("Mode: " + toString(currentMode), juce::NotificationType::dontSendNotification);
+    // modeLabel.setJustificationType(juce::Justification::centredRight);
+    // modeLabel.setColour(juce::Label::textColourId, findColour(juce::Label::textColourId));
+    // modeLabel.setFont(juce::Font(14.0f));
+    //
+    // addAndMakeVisible(toolbar);
+    // addAndMakeVisible(sidebar);
+    // addAndMakeVisible(pitchView);
+    // addAndMakeVisible(noteView);
+    // addAndMakeVisible(overview);
+    // addAndMakeVisible(timeline);
+    // addAndMakeVisible(modeLabel);
+    // addAndMakeVisible(quickHelpOverlay);
+    // quickHelpOverlay.setInterceptsMouseClicks(true, true);
+    // quickHelpOverlay.setVisible(false);
+    // quickHelpOverlay.onDismiss = [this]
+    // {
+    //     quickHelpVisible = false;
+    //     quickHelpOverlay.setVisible(false);
+    // };
+    //
+    // toolbar.setAutoFollowEnabled(autoFollowEnabled);
+    // sidebar.setUndoManager(&undoManager);
+    // updateQuickHelpContent();
+    //
+    // analysisReporter = std::make_shared<GuiProgressReporter>(
+    //     [this](double progress, const juce::String& message, ProgressState state)
+    //     {
+    //         juce::String displayMessage = message;
+    //         if (displayMessage.isEmpty())
+    //         {
+    //             switch (state)
+    //             {
+    //                 case ProgressState::Active:
+    //                     displayMessage = "Running analysis...";
+    //                     break;
+    //                 case ProgressState::Completed:
+    //                     displayMessage = "Analysis completed";
+    //                     break;
+    //                 case ProgressState::Cancelled:
+    //                     displayMessage = "Analysis cancelled";
+    //                     break;
+    //                 case ProgressState::Idle:
+    //                     displayMessage = "Ready";
+    //                     break;
+    //             }
+    //         }
+    //         toolbar.setAnalysisStatus(displayMessage, progress, state);
+    //     });
+    //
+    // toolbar.setAnalysisStatus("Ready", 0.0, ProgressState::Idle);
 }
 
 MainEditor::~MainEditor()

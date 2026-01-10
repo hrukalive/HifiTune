@@ -50,3 +50,4 @@ TimelineLookAndFeel::TimelineLookAndFeel()
     setColour(juce::ResizableWindow::backgroundColourId, juce::Colour::fromString("#121622"));
     setColour(juce::Label::textColourId, juce::Colour::fromString("#D2D6F0"));
 }
+
