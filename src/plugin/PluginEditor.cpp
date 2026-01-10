@@ -1,21 +1,49 @@
+/*
+  ==============================================================================
+
+    This file contains the basic framework code for a JUCE plugin editor.
+
+  ==============================================================================
+*/
+
+#include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-HifiTuneAudioProcessorEditor::HifiTuneAudioProcessorEditor(juce::AudioProcessor& processor)
-    : juce::AudioProcessorEditor(processor)
+//==============================================================================
+HiFiTuneAudioProcessorEditor::HiFiTuneAudioProcessorEditor (HiFiTuneAudioProcessor& p)
+    : AudioProcessorEditor (&p),
+     #if JucePlugin_Enable_ARA
+      AudioProcessorEditorARAExtension (&p),
+     #endif
+      audioProcessor (p)
 {
-    setSize(1280, 720);
-    addAndMakeVisible(mainEditor);
-    mainEditor.grabKeyboardFocus();
+   #if JucePlugin_Enable_ARA
+    // ARA plugins must be resizable for proper view embedding
+    setResizable (true, false);
+   #endif
+
+    // Make sure that before the constructor has finished, you've set the
+    // editor's size to whatever you need it to be.
+    setSize (400, 300);
 }
 
-HifiTuneAudioProcessorEditor::~HifiTuneAudioProcessorEditor() = default;
-
-void HifiTuneAudioProcessorEditor::paint(juce::Graphics& g)
+HiFiTuneAudioProcessorEditor::~HiFiTuneAudioProcessorEditor()
 {
-    // g.fillAll(juce::Colour::fromString("#12131A"));
 }
 
-void HifiTuneAudioProcessorEditor::resized()
+//==============================================================================
+void HiFiTuneAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    mainEditor.setBounds(getLocalBounds());
+    // (Our component is opaque, so we must completely fill the background with a solid colour)
+    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
+
+    g.setColour (juce::Colours::white);
+    g.setFont (juce::FontOptions (15.0f));
+    g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
+}
+
+void HiFiTuneAudioProcessorEditor::resized()
+{
+    // This is generally where you'll want to lay out the positions of any
+    // subcomponents in your editor..
 }

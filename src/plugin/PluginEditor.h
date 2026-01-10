@@ -1,17 +1,36 @@
+/*
+  ==============================================================================
+
+    This file contains the basic framework code for a JUCE plugin editor.
+
+  ==============================================================================
+*/
+
 #pragma once
 
-#include <juce_audio_processors/juce_audio_processors.h>
-#include "../ui/MainEditor.h"
+#include <JuceHeader.h>
+#include "PluginProcessor.h"
 
-class HifiTuneAudioProcessorEditor final : public juce::AudioProcessorEditor
+//==============================================================================
+/**
+*/
+class HiFiTuneAudioProcessorEditor  : public juce::AudioProcessorEditor
+                            #if JucePlugin_Enable_ARA
+                             , public juce::AudioProcessorEditorARAExtension
+                            #endif
 {
 public:
-    explicit HifiTuneAudioProcessorEditor(juce::AudioProcessor& processor);
-    ~HifiTuneAudioProcessorEditor() override;
+    HiFiTuneAudioProcessorEditor (HiFiTuneAudioProcessor&);
+    ~HiFiTuneAudioProcessorEditor() override;
 
-    void paint(juce::Graphics& g) override;
+    //==============================================================================
+    void paint (juce::Graphics&) override;
     void resized() override;
 
 private:
-    MainEditor mainEditor;
+    // This reference is provided as a quick way for your editor to
+    // access the processor object that created it.
+    HiFiTuneAudioProcessor& audioProcessor;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HiFiTuneAudioProcessorEditor)
 };

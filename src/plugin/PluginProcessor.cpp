@@ -1,116 +1,191 @@
+/*
+  ==============================================================================
+
+    This file contains the basic framework code for a JUCE plugin processor.
+
+  ==============================================================================
+*/
+
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-#if HIFITUNE_ENABLE_ARA
-#include "../ara/AraIntegration.h"
+//==============================================================================
+HiFiTuneAudioProcessor::HiFiTuneAudioProcessor()
+#ifndef JucePlugin_PreferredChannelConfigurations
+     : AudioProcessor (BusesProperties()
+                     #if ! JucePlugin_IsMidiEffect
+                      #if ! JucePlugin_IsSynth
+                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
+                      #endif
+                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
+                     #endif
+                       )
 #endif
-
-HifiTuneAudioProcessor::HifiTuneAudioProcessor()
-    : juce::AudioProcessor(BusesProperties().withInput("Input", juce::AudioChannelSet::stereo(), true)
-                                              .withOutput("Output", juce::AudioChannelSet::stereo(), true))
 {
-#if HIFITUNE_ENABLE_ARA
-    HifiTuneAraIntegration::configureProcessor(*this);
-#endif
 }
 
-HifiTuneAudioProcessor::~HifiTuneAudioProcessor() = default;
-
-const juce::String HifiTuneAudioProcessor::getName() const
+HiFiTuneAudioProcessor::~HiFiTuneAudioProcessor()
 {
-    return "HifiTune";
 }
 
-bool HifiTuneAudioProcessor::acceptsMidi() const
+//==============================================================================
+const juce::String HiFiTuneAudioProcessor::getName() const
 {
+    return JucePlugin_Name;
+}
+
+bool HiFiTuneAudioProcessor::acceptsMidi() const
+{
+   #if JucePlugin_WantsMidiInput
+    return true;
+   #else
     return false;
+   #endif
 }
 
-bool HifiTuneAudioProcessor::producesMidi() const
+bool HiFiTuneAudioProcessor::producesMidi() const
 {
+   #if JucePlugin_ProducesMidiOutput
+    return true;
+   #else
     return false;
+   #endif
 }
 
-bool HifiTuneAudioProcessor::isMidiEffect() const
+bool HiFiTuneAudioProcessor::isMidiEffect() const
 {
+   #if JucePlugin_IsMidiEffect
+    return true;
+   #else
     return false;
+   #endif
 }
 
-double HifiTuneAudioProcessor::getTailLengthSeconds() const
+double HiFiTuneAudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int HifiTuneAudioProcessor::getNumPrograms()
+int HiFiTuneAudioProcessor::getNumPrograms()
 {
-    return 1;
+    return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
+                // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int HifiTuneAudioProcessor::getCurrentProgram()
+int HiFiTuneAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void HifiTuneAudioProcessor::setCurrentProgram(int)
+void HiFiTuneAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const juce::String HifiTuneAudioProcessor::getProgramName(int)
+const juce::String HiFiTuneAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void HifiTuneAudioProcessor::changeProgramName(int, const juce::String&)
+void HiFiTuneAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
 }
 
-void HifiTuneAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
+//==============================================================================
+void HiFiTuneAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    localRecorder.prepare(sampleRate, getTotalNumInputChannels(), samplesPerBlock);
+    // Use this method as the place to do any pre-playback
+    // initialisation that you need..
 }
 
-void HifiTuneAudioProcessor::releaseResources()
+void HiFiTuneAudioProcessor::releaseResources()
 {
-    localRecorder.reset();
+    // When playback stops, you can use this as an opportunity to free up any
+    // spare memory, etc.
 }
 
-bool HifiTuneAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
+#ifndef JucePlugin_PreferredChannelConfigurations
+bool HiFiTuneAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
-    const auto stereo = juce::AudioChannelSet::stereo();
-    return layouts.getMainInputChannelSet() == stereo && layouts.getMainOutputChannelSet() == stereo;
-}
+  #if JucePlugin_IsMidiEffect
+    juce::ignoreUnused (layouts);
+    return true;
+  #else
+    // This is the place where you check if the layout is supported.
+    // In this template code we only support mono or stereo.
+    // Some plugin hosts, such as certain GarageBand versions, will only
+    // load plugins that support stereo bus layouts.
+    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
+     && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
+        return false;
 
-void HifiTuneAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
+    // This checks if the input layout matches the output layout
+   #if ! JucePlugin_IsSynth
+    if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
+        return false;
+   #endif
+
+    return true;
+  #endif
+}
+#endif
+
+void HiFiTuneAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
-#if HIFITUNE_ENABLE_ARA
-    const auto realtime = isNonRealtime() ? juce::AudioProcessor::Realtime::no : juce::AudioProcessor::Realtime::yes;
-    if (processBlockForARA(buffer, realtime, getPlayHead()))
-        return;
-#endif
-    localRecorder.pushBlock(buffer);
-    buffer.clear();
+    auto totalNumInputChannels  = getTotalNumInputChannels();
+    auto totalNumOutputChannels = getTotalNumOutputChannels();
+
+    // In case we have more outputs than inputs, this code clears any output
+    // channels that didn't contain input data, (because these aren't
+    // guaranteed to be empty - they may contain garbage).
+    // This is here to avoid people getting screaming feedback
+    // when they first compile a plugin, but obviously you don't need to keep
+    // this code if your algorithm always overwrites all the output channels.
+    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+        buffer.clear (i, 0, buffer.getNumSamples());
+
+    // This is the place where you'd normally do the guts of your plugin's
+    // audio processing...
+    // Make sure to reset the state if your inner loop is processing
+    // the samples and the outer loop is handling the channels.
+    // Alternatively, you can process the samples with the channels
+    // interleaved by keeping the same state.
+    for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    {
+        auto* channelData = buffer.getWritePointer (channel);
+
+        // ..do something to the data...
+    }
 }
 
-bool HifiTuneAudioProcessor::hasEditor() const
+//==============================================================================
+bool HiFiTuneAudioProcessor::hasEditor() const
 {
-    return true;
+    return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* HifiTuneAudioProcessor::createEditor()
+juce::AudioProcessorEditor* HiFiTuneAudioProcessor::createEditor()
 {
-    return new HifiTuneAudioProcessorEditor(*this);
+    return new HiFiTuneAudioProcessorEditor (*this);
 }
 
-void HifiTuneAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
+//==============================================================================
+void HiFiTuneAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
+    // You should use this method to store your parameters in the memory block.
+    // You could do that either as raw data, or use the XML or ValueTree classes
+    // as intermediaries to make it easy to save and load complex data.
 }
 
-void HifiTuneAudioProcessor::setStateInformation(const void*, int)
+void HiFiTuneAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
+    // You should use this method to restore your parameters from this memory block,
+    // whose contents will have been created by the getStateInformation() call.
 }
 
+//==============================================================================
+// This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new HifiTuneAudioProcessor();
+    return new HiFiTuneAudioProcessor();
 }

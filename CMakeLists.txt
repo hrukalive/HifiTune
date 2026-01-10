@@ -62,68 +62,15 @@ juce_generate_juce_header(HiFiTune)
 # ---------------------------
 target_sources(HiFiTune
     PRIVATE
-        src/SharedResources.cpp
-        src/analysis/AnalysisPipeline.cpp
-        src/analysis/AnalyzerRegistry.cpp
-        src/analysis/AudioBufferSource.cpp
-        src/analysis/MelSpectrogram.cpp
-        src/analysis/MidiNoteExtractor.cpp
-        src/analysis/PitchAnalyzer.cpp
-        src/analysis/SilenceSegmenter.cpp
-        src/analysis/Stretching.cpp
-        src/inference/ModelConfig.cpp
-        src/inference/ModelLoader.cpp
-        src/inference/ModelRegistry.cpp
-        src/inference/OnnxRuntimeEngine.cpp
-        src/midi/MidiReferenceManager.cpp
-        src/midi/MidiReferenceSnapper.cpp
-        src/midi/SomeMidiExtractor.cpp
-        src/pitch/PitchDetector.cpp
-        src/pitch/RmvpePitchDetector.cpp
-        src/pitch/FcpePitchDetector.cpp
-        src/tasks/AnalysisTask.cpp
-        src/tasks/ProgressReporter.cpp
-        src/tasks/TaskQueue.cpp
-        src/ui/LookAndFeel.cpp
-        src/ui/lookandfeel/EditorLookAndFeel.cpp
-        src/ui/MidiReferenceOverlay.cpp
-        src/ui/MainEditor.cpp
-        src/ui/ToolbarComponent.cpp
-        src/ui/SidebarComponent.cpp
-        src/ui/NoteViewComponent.cpp
-        src/ui/PitchViewComponent.cpp
-        src/ui/history/HistoryComponent.cpp
-        src/ui/QuickHelpOverlay.cpp
-        src/ui/OverviewComponent.cpp
-        src/ui/TimelineComponent.cpp
-        src/ui/ViewportController.cpp
-        src/vocoder/Vocoder.cpp
-        src/vocoder/NsfHifiGanVocoder.cpp
         src/plugin/PluginProcessor.cpp
         src/plugin/PluginEditor.cpp
-        src/ara/AraIntegration.cpp
-        src/ara/AraDocumentController.cpp
-        src/ara/AraRegionMapper.cpp
-        src/model/AnalysisConfigState.cpp
-        src/model/ProjectState.cpp
-        src/model/TrackState.cpp
-        src/model/ClipState.cpp
-        src/model/SegmentState.cpp
-        src/model/NoteState.cpp
-        src/model/MidiNoteState.cpp
-        src/model/MidiReferenceState.cpp
-        src/model/PitchCurveState.cpp
-        src/model/TensionState.cpp
-        src/analysis/DiffSingerDecomposer.cpp
-        src/analysis/HarmonicNoiseSeparator.cpp
-        src/commands/CommandManager.cpp
+        src/plugin/PluginARADocumentController.cpp
+        src/plugin/PluginARAPlaybackRenderer.cpp
 )
 
 juce_add_binary_data(HifiTuneResources
     SOURCES
-        resources/icon.svg
-        resources/lookandfeel.json
-        resources/keyboard_shortcuts.txt
+        assets/icon.svg
 )
 
 # ---------------------------
@@ -143,11 +90,15 @@ target_link_libraries(HiFiTune
         juce::juce_audio_basics
         juce::juce_audio_devices
         juce::juce_audio_formats
-        juce::juce_audio_processors
         juce::juce_audio_plugin_client
+        juce::juce_audio_processors
+        juce::juce_audio_processors_headless
         juce::juce_audio_utils
+        juce::juce_core
         juce::juce_data_structures
         juce::juce_dsp
+        juce::juce_events
+        juce::juce_graphics
         juce::juce_gui_basics
         juce::juce_gui_extra
         # ARA support is hooked via IS_ARA_EFFECT + juce_set_ara_sdk_path

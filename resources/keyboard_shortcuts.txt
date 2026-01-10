@@ -1,4 +1,0 @@
-Space: Play/Stop
-Cmd/Ctrl+Z: Undo
-Cmd/Ctrl+Shift+Z: Redo
-Cmd/Ctrl+S: Save preset
